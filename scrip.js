@@ -17,7 +17,14 @@ function addToCart(productName, productPrice, productImage) {
         cart.push(item);
     }
     localStorage.setItem('cart', JSON.stringify(cart)); // Save updated cart to localStorage
+    updateCartCount();
     renderCart();
+}
+
+// Function to update the cart count
+function updateCartCount() {
+    const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
+    document.getElementById('cart-count').textContent = cartCount;
 }
 
 // Function to render the cart
@@ -49,6 +56,7 @@ function updateQuantity(index, change) {
     if (cart[index].quantity + change > 0) {
         cart[index].quantity += change;
         localStorage.setItem('cart', JSON.stringify(cart)); // Update cart in localStorage
+        updateCartCount();
         renderCart();
     }
 }
@@ -57,7 +65,13 @@ function updateQuantity(index, change) {
 function removeFromCart(index) {
     cart.splice(index, 1);
     localStorage.setItem('cart', JSON.stringify(cart)); // Update cart in localStorage
+    updateCartCount();
     renderCart();
+}
+
+// Function to confirm order and redirect to checkout page
+function confirmOrder() {
+    window.location.href = 'checkout.html'; // Redirect to checkout page
 }
 
 // Add click event listeners to add-to-cart buttons
@@ -71,10 +85,14 @@ document.querySelectorAll('.add-to-cart').forEach((button) => {
     });
 });
 
-// Function to confirm order and redirect to checkout page
-function confirmOrder() {
-    window.location.href = 'checkout.html'; // Redirect to checkout page
-}
-
 // Initialize cart on page load
-renderCart();
+document.addEventListener('DOMContentLoaded', () => {
+    updateCartCount();
+    renderCart();
+});
+
+// Function to toggle cart visibility
+function toggleCart() {
+    var sidebar = document.getElementById('cart-sidebar');
+    sidebar.classList.toggle('active');
+};
